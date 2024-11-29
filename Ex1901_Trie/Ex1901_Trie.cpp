@@ -78,7 +78,13 @@ public:
 		{
 			// TODO: 필요한 경우 새로운 자식 노드 생성
 
-			// n = n->children.at(c); // n = n->children[c];
+			// n = n->children[c];
+			n = n->children.at(c);
+
+			if (n == nullptr)
+			{
+				n = new Node;
+			}
 
 			// 보충
 			// - children.at(c)는 children[c]와 같은 기능을 합니다.
@@ -94,7 +100,22 @@ public:
 		// 키(key)를 찾지 못했을 경우에는 빈 문자열(string(""))을 값(value)으로 반환
 		// 키의 마지막 글자에 해당하지 않는 노드의 value는 빈 문자열
 
-		return string(""); // TODO:
+		Node* cur = root;
+		string result;
+
+		for (char c : key)
+		{
+			if (cur->children.at(c) == nullptr)
+			{
+				return result;
+			}
+
+			cur = cur->children[c];
+		}
+
+		result = cur->value;
+				
+		return result;
 	}
 
 	// 재귀호출을 사용하는 삽입(Insert)
@@ -132,7 +153,17 @@ public:
 		// 마지막 글자의 노드 포인터 반환
 		// 찾지 못했다면 nullptr 반환
 
-		return nullptr; // TODO:
+		for (char c : key)
+		{
+			if (n->children.at(c) == nullptr)
+			{
+				return nullptr;
+			}
+
+			n = n->children[c];
+		}
+
+		return n; // TODO:
 	}
 
 	// 저장되어 있는 모든 키들을 찾아서 반환
@@ -164,7 +195,10 @@ public:
 
 		for (int c = 0; c < R; c++)
 		{
-			// TODO: Collect(...)
+			if (n->children.at(c) != nullptr)
+			{
+				Collect(n->children[c], pre + static_cast<char>(c), keys);
+			}
 		}
 	}
 
@@ -181,8 +215,16 @@ public:
 		if (!n) return l;
 
 		// TODO: n->value가 비어있지 않다면 key의 마지막 글자라는 의미니까 l에 d를 기록
+		if (!n->value.empty())
+		{
+			l = d;
+		}
 
 		// TODO: d와 s.length()가 같다면 더 진행할 필요가 없으니까 l 반환
+		if (s.length() == d)
+		{
+			return l;
+		}
 
 		char c = s.at(d); // s[d]
 
@@ -214,6 +256,7 @@ public:
 		if (next == '?')
 		{
 			// TODO: ? 자리에 어떤 글자든지 들어올 수 있다 -> 모든 글자에 대해 재귀 호출
+			Collect(n, pre, keys);
 		}
 		else if (next == '*')
 		{
@@ -232,6 +275,7 @@ public:
 		else
 		{
 			// TODO: 그 외의 일반적인 알파벳일 경우
+			CollectMatch(n->children.at(next), pre + next, pat, keys);
 		}
 	}
 
@@ -262,11 +306,12 @@ public:
 			n->children[c] = Delete(n->children[c], key, d + 1);
 		}
 
-		//if ( TODO: 자식이 하나도 없고 value도 비어있다면)
-		//{
-		//	// TODO: 메모리 삭제
-		//	n = nullptr;
-		//}
+		if (IsEmpty(n) &&
+			(n->value == ""))
+		{
+			delete n;
+			n = nullptr;
+		}
 
 		return n;
 	}
@@ -419,7 +464,7 @@ int main()
 	//      "1"이 들어가면 "ab1cd" 
 	//      "12"가 들어가면 "ab12cd" 
 	//      "123"이 들어가면 "ab123cd"
-	{
+	/*{
 		Trie trie;
 
 		for (string w : {"abcd", "ab1cd", "ab12cd", "ab123cd"})
@@ -431,7 +476,7 @@ int main()
 			cout << k << " ";
 		}
 		cout << endl << endl;
-	}
+	}*/
 
 	// 영어 사전 (사전 파일을 읽어들이는 데에 시간이 약간 걸립니다.)
 	// run_dict();
