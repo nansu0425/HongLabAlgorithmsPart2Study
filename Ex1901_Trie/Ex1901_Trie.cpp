@@ -77,14 +77,13 @@ public:
 		for (char c : key)
 		{
 			// TODO: 필요한 경우 새로운 자식 노드 생성
-
-			// n = n->children[c];
-			n = n->children.at(c);
-
-			if (n == nullptr)
+			if (n->children.at(c) == nullptr)
 			{
-				n = new Node;
+				n->children[c] = new Node;
 			}
+
+			n = n->children[c];
+			// n = n->children.at(c);
 
 			// 보충
 			// - children.at(c)는 children[c]와 같은 기능을 합니다.
