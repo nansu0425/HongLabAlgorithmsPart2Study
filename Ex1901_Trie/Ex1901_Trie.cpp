@@ -269,7 +269,28 @@ public:
 			// 2. * 자리에 ?처럼 어떤 글자든지 들어갈 수 있는 경우
 			// 3. * 자리에 여러 글자가 들어가는 경우 (예: wor*d로 world, worried 등을 찾음)
 
-			// TODO:
+			// 2번 경우
+			if (d + 1 == pat.length())
+			{
+				pat[d] = '?';
+				CollectMatch(n, pre, pat, keys);
+
+				return;
+			}
+
+			// 1번 경우
+			string starErased = pat;
+			starErased.erase(starErased.begin() + d);
+
+			CollectMatch(n, pre, starErased, keys);
+
+			// 3번 경우
+			pat.insert(pat.begin() + d, '*');
+
+			for (int c = 0; c < R; ++c)
+			{
+				CollectMatch(n->children[c], pre + static_cast<char>(c), pat, keys);
+			}
 		}
 		else
 		{
@@ -463,7 +484,7 @@ int main()
 	//      "1"이 들어가면 "ab1cd" 
 	//      "12"가 들어가면 "ab12cd" 
 	//      "123"이 들어가면 "ab123cd"
-	/*{
+	{
 		Trie trie;
 
 		for (string w : {"abcd", "ab1cd", "ab12cd", "ab123cd"})
@@ -475,10 +496,10 @@ int main()
 			cout << k << " ";
 		}
 		cout << endl << endl;
-	}*/
+	}
 
 	// 영어 사전 (사전 파일을 읽어들이는 데에 시간이 약간 걸립니다.)
-	// run_dict();
+	run_dict();
 
 	return 0;
 }
