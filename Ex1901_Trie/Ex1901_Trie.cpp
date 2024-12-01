@@ -130,11 +130,14 @@ public:
 		if (d == key.length())
 		{
 			// TODO: 해당 노드에 val 저장
+			n->value = val;
+
 			return n;
 		}
 
 		// TODO: 다음 글자로 진행 (주의: d + 1)
-
+		Insert(n->children.at(key.at(d)), key, val, d + 1);
+		
 		return n;
 	}
 
